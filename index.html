@@ -361,11 +361,10 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
             transition: all 0.4s ease;
             position: relative;
-            height: 400px;
             display: flex;
             flex-direction: column;
             border: 2px solid rgba(212, 175, 55, 0.3);
-            cursor: pointer;
+            cursor: default; /* تغيير من pointer إلى default */
         }
         
         .section-box:hover {
@@ -408,24 +407,43 @@
             line-height: 1.9;
         }
         
-        .section-link {
-            display: block;
+        /* مربع الدخول للمحاضرات */
+        .lectures-link-box {
             background-color: rgba(212, 175, 55, 0.15);
-            padding: 16px;
-            border-radius: 10px;
-            border: 1px dashed rgba(212, 175, 55, 0.5);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px dashed rgba(212, 175, 55, 0.7);
             text-align: center;
-            color: var(--gold-color);
-            text-decoration: none;
-            font-size: 1.3rem;
+            margin-top: 30px;
             transition: all 0.3s ease;
-            margin-top: auto;
+            cursor: pointer;
         }
         
-        .section-link:hover {
+        .lectures-link-box:hover {
             background-color: rgba(212, 175, 55, 0.3);
-            border: 1px solid var(--gold-color);
-            transform: translateY(-3px);
+            border: 2px solid var(--gold-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .lectures-link {
+            display: block;
+            color: var(--gold-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Scheherazade New', serif;
+        }
+        
+        .lectures-link i {
+            margin-left: 10px;
+        }
+        
+        .lectures-description {
+            color: var(--accent-color);
+            margin-top: 10px;
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
         
         /* قسم التواصل */
@@ -541,6 +559,14 @@
             .modal-content {
                 padding: 25px;
             }
+            
+            .lectures-link-box {
+                padding: 20px;
+            }
+            
+            .lectures-link {
+                font-size: 1.3rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -588,6 +614,14 @@
                 flex-direction: column;
                 gap: 15px;
             }
+            
+            .lectures-link-box {
+                padding: 18px;
+            }
+            
+            .lectures-link {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -615,21 +649,6 @@
             <p class="modal-text">
                 مدرس لغة عربية متمرس مع أكثر من 15 عامًا من الخبرة في تدريس فروع اللغة العربية. يمتلك منهجية فريدة في تبسيط القواعد وجعلها شيقة وسهلة الفهم، مع التركيز على التطبيق العملي والنماذج الحية من التراث العربي الأصيل.
             </p>
-        </div>
-    </div>
-    
-    <!-- نافذة تأكيد قسم النحو -->
-    <div class="modal-overlay" id="nahwConfirmModal">
-        <div class="modal-content confirm-modal">
-            <div class="close-modal" id="closeNahwModal">
-                <i class="fas fa-times"></i>
-            </div>
-            <h2 class="modal-title">أقسام النحو</h2>
-            <p class="modal-text">هل تريد عرض أقسام النحو المتاحة؟</p>
-            <div class="confirm-buttons">
-                <button class="confirm-btn yes-btn" id="nahwYes">نعم</button>
-                <button class="confirm-btn no-btn" id="nahwNo">لا</button>
-            </div>
         </div>
     </div>
     
@@ -663,8 +682,13 @@
                 <div class="section-content">
                     <p>قسم متخصص في قواعد النحو العربي للصف الثالث الثانوي، يشمل شرحًا مفصلاً للإعراب، القواعد النحوية الأساسية والمتقدمة، التطبيقات العملية، والتدريبات الشاملة وفقًا لمنهج الصف الثالث الثانوي.</p>
                     <p>يغطي القسم جميع موضوعات النحو المقررة مثل: المبتدأ والخبر، الفاعل ونائب الفاعل، المنصوبات، المجرورات، التوابع، الأساليب النحوية، وغيرها من الموضوعات الأساسية للثانوية العامة.</p>
-                    <div class="section-link">
-                        <i class="fas fa-book-open"></i> اضغط هنا للدخول إلى قسم النحو
+                    
+                    <!-- مربع الدخول للمحاضرات -->
+                    <div class="lectures-link-box" id="lecturesBox">
+                        <a href="https://m7ashr213-cell.github.io/Ar2/" target="_blank" class="lectures-link">
+                            <i class="fas fa-book-open"></i> الدخول للمحاضرات
+                        </a>
+                        <p class="lectures-description">انقر هنا للدخول إلى محاضرات النحو الكاملة</p>
                     </div>
                 </div>
             </div>
@@ -700,12 +724,8 @@
         const teacherModal = document.getElementById('teacherModal');
         const closeModal = document.getElementById('closeModal');
         
-        // إدارة نافذة تأكيد قسم النحو
-        const nahwSection = document.getElementById('nahwSection');
-        const nahwConfirmModal = document.getElementById('nahwConfirmModal');
-        const closeNahwModal = document.getElementById('closeNahwModal');
-        const nahwYesBtn = document.getElementById('nahwYes');
-        const nahwNoBtn = document.getElementById('nahwNo');
+        // مربع الدخول للمحاضرات
+        const lecturesBox = document.getElementById('lecturesBox');
         
         // فتح نافذة المدرس عند النقر على الصورة
         teacherImage.addEventListener('click', function() {
@@ -727,55 +747,11 @@
             }
         });
         
-        // فتح نافذة تأكيد قسم النحو
-        nahwSection.addEventListener('click', function() {
-            nahwConfirmModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        
-        // إغلاق نافذة تأكيد قسم النحو
-        closeNahwModal.addEventListener('click', function() {
-            nahwConfirmModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-        
-        // إغلاق نافذة تأكيد قسم النحو عند النقر خارج المحتوى
-        nahwConfirmModal.addEventListener('click', function(e) {
-            if (e.target === nahwConfirmModal) {
-                nahwConfirmModal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        });
-        
-        // معالجة اختيار "نعم" في نافذة تأكيد قسم النحو
-        nahwYesBtn.addEventListener('click', function() {
-            nahwConfirmModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            
-            // هنا يمكنك وضع الرابط الفعلي الذي تريده
-            const nahwLink = "https://m7ashr213-cell.github.io/Ar2/"; // رابط مؤقت، يمكن تغييره لاحقًا
-            
-            // فتح الرابط في نافذة جديدة
-            window.open(nahwLink, '_blank');
-            
-            // أو يمكنك استخدام: window.location.href = nahwLink;
-        });
-        
-        // معالجة اختيار "لا" في نافذة تأكيد قسم النحو
-        nahwNoBtn.addEventListener('click', function() {
-            nahwConfirmModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-        
         // إغلاق النوافذ عند الضغط على زر Escape
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 if (teacherModal.classList.contains('active')) {
                     teacherModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-                if (nahwConfirmModal.classList.contains('active')) {
-                    nahwConfirmModal.classList.remove('active');
                     document.body.style.overflow = 'auto';
                 }
             }
@@ -831,5 +807,4 @@
         });
     </script>
 </body>
-
 </html>
